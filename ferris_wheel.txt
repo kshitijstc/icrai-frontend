@@ -1,0 +1,176 @@
+#include<bits/stdc++.h>
+#include <cmath>
+
+using namespace std;
+
+#define ll long long
+#define pb push_back
+#define srt(v) sort(v.begin(),v.end());
+#define vll vector<ll>
+#define pll pair<long long,long long>
+#define mll map<ll,ll>
+#define sll set<ll>
+#define vi vector<int>
+#define pi pair<int,int>
+#define cy cout<<"YES"<<endl
+#define cn cout<<"NO"<<endl
+#define fori for(ll i=0;i<n;i++)
+#define forj for(ll j=0;j<n;j--)
+#define fi(i,a,b) for(ll i=a;i<b;i++)
+#define fd(i,a,b) for(ll i=b;i>a;i--)
+#define seena fori{cin>>a[i];}
+#define seenb fori{cin>>b[i];}
+#define seenc fori{cin>>c[i];}
+#define MP make_pair
+#define S second
+#define F first 
+#define mod 1000000007
+#define nxt cout<<"\n"
+
+// ll mini(ll arr[],ll n){
+//     ll b=pow(10,9);
+//     ll temp;
+//     fi(i,0,n){
+//         if(b>=arr[i]){
+//             b=arr[i];
+//             temp=i;
+//         }
+//     }
+//     return temp;
+// }
+// ll MEX(ll a[],ll n){
+//     ll b[n]={0};
+//     fori{
+//         b[a[i]]++;
+//     }
+//     ll c=0;
+//     fori{
+//         if(b[i]==0){
+//             c=i;    
+//         }
+//     }
+//     return c;
+// }
+// ----------uncomment both lcm and gcd------------------------------------
+// ll gcd(ll a,ll b){
+//     if(b==0)return a;
+//     else return gcd(b,a%b);
+// }
+
+// ll lcm(vll arr,ll n)
+// {
+//     ll ans = arr[0];
+//     for (int i = 1; i < n; i++)
+//         ans = (((arr[i] * ans))/(gcd(arr[i], ans)));
+//      return ans;
+// }
+// ----------------------------------------------------------
+
+// ---Logarithm in any base--------
+// ll logb_a(ll b, ll a)
+// {
+//     return log10(a) / log10(b);
+// }
+// --------------------------------
+
+class DisjointSet{
+    public:
+    vector<ll> rank,size,parent;
+    DisjointSet(ll n){
+        rank.resize(n+1,0);
+        size.resize(n+1,1);
+        parent.resize(n+1);
+        for(int i=0;i<n+1;i++){
+            parent[i]=i;
+        }
+    }
+    ll findUltimateParent(ll node){
+        if(node==parent[node]){
+            return node;
+        }
+        return parent[node]=findUltimateParent(parent[node]);
+    }
+    void unionByRank(ll u,ll v){
+        ll ulp_u=findUltimateParent(u);
+        ll ulp_v=findUltimateParent(v);
+        if(rank[ulp_u]>rank[ulp_v]){
+            parent[ulp_v]=ulp_u;
+        }else if(rank[ulp_v]>rank[ulp_u]){
+            parent[ulp_u]=ulp_v;
+        }else{
+            parent[ulp_v]=ulp_u;
+            rank[ulp_u]++;
+        }
+    }
+    void unionBySize(ll u,ll v){
+        ll ulp_u=findUltimateParent(u);
+        ll ulp_v=findUltimateParent(v);
+        if(size[ulp_u]>size[ulp_v]){
+            parent[ulp_v]=ulp_u;
+            size[ulp_u]+=size[ulp_v];
+        }else{
+            parent[ulp_u]=ulp_v;
+            size[ulp_v]+=size[ulp_u];
+        }
+    }
+};
+
+ll dpsolve(vll &a,ll ind,ll target,vector<vll> &dp){
+    if(target==0) return 1;
+    if(ind==0) return a[0]==target;
+    if(dp[ind][target]!=-1) return dp[ind][target];
+    ll not_pick=dpsolve(a,ind-1,target,dp);
+    ll pick=0;
+    if(target>=a[ind]) pick=dpsolve(a,ind-1,target-a[ind],dp);
+    return dp[ind][target]=(pick+not_pick);
+}
+
+void solve(){
+  ll n,x;
+  cin>>n>>x;
+  vll a(n);
+  seena;
+  srt(a);
+  ll ans=0,i=0,j=n-1;
+  while(i<=j){
+      if(i==j){
+          ans++;i++;j--;
+      }else if(a[i]+a[j]<=x){
+          ans++;i++;j--;
+      }else{
+          j--;
+          ans++;
+      }
+  }
+  cout<<ans;
+//   if((n-1)%4==0 || (n-1)%4==1){
+//       cout<<0<<"\n";
+//       return ;
+//   }
+//   ll sum=(n*(n+1))/4;
+//   vll a(n);
+//   fori{
+//       a[i]=i+1;
+//   }
+//   vector<vll> dp(n,vll(sum+1,-1));
+  
+// //   dp[0]=0;
+// //   for(ll i=1;i<=n;i++){
+// //       ll not_take=dp[i-1];
+// //       if(not_take==sum) dp[i]=(1+not_take)%mod;
+// //       ll take=a[i-1]+dp[i-1];
+// //       if(take==sum) dp[i]=(1+take)%mod;
+// //   }
+//   cout<<(dpsolve(a,n-1,sum,dp)/2)%mod<<"\n";
+}
+
+int main(){
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    // ll t;
+    // cin>>t;
+    // while(t--){
+        solve();
+    // }
+    return 0;
+}
